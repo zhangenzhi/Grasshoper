@@ -1,5 +1,6 @@
 import numpy as np
 import csv
+import plotly.graph_objects as go
 # generate csv dataset
 
 class Generator(object):
@@ -32,7 +33,6 @@ class FunctionGenerator(Generator):
         self.y = []
 
         self._build()
-        self.save()
 
     def _build(self):
         #range
@@ -52,8 +52,11 @@ class FunctionGenerator(Generator):
 
     def draw(self):
         # if can
-        pass
+        fig = go.Figure(data=go.Scatter(x=self.x, y=self.y,mode="markers"))
+        fig.show()  
         
 if __name__ == "__main__":
     f = np.sin
     gen = FunctionGenerator(f=f,radius=[-10,10],name="sin")
+    # gen.draw()
+    gen.save()
