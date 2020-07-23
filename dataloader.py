@@ -3,7 +3,7 @@ import pandas as pd
 
 class DataLoader(object):
     def __init__(self, config):
-        pass
+        self.size = 0 
 
     def _build_pipe(self):
         pass
@@ -14,22 +14,34 @@ class DataLoader(object):
     def __getitem__(self):
         pass
 
-    def __len__():
-        pass
+    def __len__(self):
+        return self.size
 
 class FuncLoader(DataLoader):
-    def __init__(self, name):
+    def __init__(self, name, validation_split=0.2):
         super(DataLoader,self).__init__
         self.filename = "./dataset/function/" + name + ".csv"
+        self.validation_split = validation_split
+
+        self.train_dataset = None
+        self.validation_dataset = None
+        self.test_dataset = None
         
 
     def load_data(self):
         df = pd.read_csv(self.filename)
+        self.size = len(df['Y'])
         label = df.pop('Y')
-        dataset = tf.data.Dataset.from_tensor_slices((df.values,label.values))
 
-        for feat,targ in dataset.take(5):
-            print ('Features: {}, Target: {}'.format(feat, targ)) 
+        split_idx = int(self.size*self.validation_split)
+
+        self.train_dataset = tf.data.Dataset.from_tensor_slices((df.values[split_idx:],label.values[split_idx:]))
+        self.train_dataset = self.train_dataset.shuffle(self.size-split_idx).batch(128)
+        self.validation_dataset = tf.data.Dataset.from_tensor_slices((df.values[:split_idx],label.values[:split_idx]))
+        self.validation_dataset = self.validation_dataset.shuffle(split_idx).batch(128)
+        return self.train_dataset,self.validation_dataset
+    
+
 
 if __name__ == "__main__":
     funcloader = FuncLoader(name="sin")

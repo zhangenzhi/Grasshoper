@@ -58,5 +58,5 @@ class FunctionGenerator(Generator):
 if __name__ == "__main__":
     f = np.sin
     gen = FunctionGenerator(f=f,radius=[-10,10],name="sin")
-    # gen.draw()
-    gen.save()
+    gen.draw()
+    # gen.save()
