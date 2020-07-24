@@ -19,10 +19,10 @@ class Generator(object):
 
 class FunctionGenerator(Generator):
     #x-y function
-    def __init__(self, f, radius, name):
+    def __init__(self, f, radius, name, num_samples=10000):
         super(FunctionGenerator,self).__init__()
         self.type = "function"
-        self.num_samples = 10000
+        self.num_samples = num_samples
 
         self.f = f
         self.radius = radius
@@ -41,10 +41,11 @@ class FunctionGenerator(Generator):
         size=self.num_samples
 
         self.x = np.random.uniform(low,high,size)
-        self.y = f(self.x)
+        self.y = self.f(self.x)
             
     def save(self):
-        with open(self.path+self.filename,mode='w') as csvfile:
+        file = self.path+self.filename
+        with open(file,mode='w+') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(["X","Y"])
             for i in range(self.num_samples):
