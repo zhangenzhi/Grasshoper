@@ -59,9 +59,7 @@ if __name__ == "__main__":
     sin_space = {"Amplitude":[0,3],"Frequency":[0,6.28],"phase":[0,1.57]}
     # sin_params = {"Amplitude":1,"Frequency":6.28,"phase":0}
     sin_wrap = SinWrapper()
-    # f = sin_wrap(sin_params)
-    # print(f(3))
-
+    
     tl = TaskLoader(sin_space)
     tl.task_sampler()
     loaders = tl.get_funcloader(func_w=sin_wrap, f_name="sin")
