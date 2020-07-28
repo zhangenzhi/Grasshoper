@@ -18,10 +18,11 @@ class DataLoader(object):
         return self.size
 
 class FuncLoader(DataLoader):
-    def __init__(self, name, validation_split=0.2):
+    def __init__(self, name, validation_split=0.2,batch_size = 128):
         super(DataLoader,self).__init__
         self.filename = "./dataset/function/" + name + ".csv"
         self.validation_split = validation_split
+        self.batch_size = batch_size
 
         self.train_dataset = None
         self.validation_dataset = None
@@ -36,9 +37,9 @@ class FuncLoader(DataLoader):
         split_idx = int(self.size*self.validation_split)
 
         self.train_dataset = tf.data.Dataset.from_tensor_slices((df.values[split_idx:],label.values[split_idx:]))
-        self.train_dataset = self.train_dataset.shuffle(self.size-split_idx).batch(128)
+        self.train_dataset = self.train_dataset.shuffle(self.size-split_idx).batch(self.batch_size)
         self.validation_dataset = tf.data.Dataset.from_tensor_slices((df.values[:split_idx],label.values[:split_idx]))
-        self.validation_dataset = self.validation_dataset.shuffle(split_idx).batch(128)
+        self.validation_dataset = self.validation_dataset.shuffle(split_idx).batch(self.batch_size)
         return self.train_dataset,self.validation_dataset
     
 

@@ -10,7 +10,7 @@ class DNN(keras.Model):
 
         self.l1 = keras.layers.Dense(units=32,activation=keras.activations.relu)
         self.l2 = keras.layers.Dense(units=16,activation=keras.activations.relu)
-        self.outputs = keras.layers.Dense(units=1,activation=keras.activations.relu)
+        self.outputs = keras.layers.Dense(units=1,activation=keras.activations.tanh)
 
     def call(self,inputs):
         x = inputs
@@ -35,7 +35,10 @@ def get_compiled_model():
 if __name__ == "__main__":
     dl = FuncLoader(name='sin')
     train_dataset,validation_dataset = dl.load_data()
-    model = get_compiled_model()
+    model = DNN()
+    model.compile(optimizer='adam',
+                  loss='mse',
+                  metrics=['mae'])
     model.fit(train_dataset, epochs=150,validation_data=validation_dataset)
     test_x = np.linspace(-20,20,100)
     res = model.predict(test_x)
